@@ -24,11 +24,11 @@
          :auto-sitemap t
          :sitemap-sort-files anti-chronologically
 	 :auto-preamble nil
-         :sitemap-title "devlift"
+         :sitemap-title "A stash of notes"
          :sitemap-filename "index.org"
          :sitemap-format-entry org-sitemap-custom-entry-format
          :sitemap-style list
-         :author "devlift"
+         :author "quanvh9"
          :email "vuhongquanbk97@gmail.com"
          :with-creator nil
 	 :html-head "<link rel=\"stylesheet\" href=\"https://vhquan.github.io/css/style.css\" type=\"text/css\"/>"

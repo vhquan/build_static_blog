@@ -1,4 +1,4 @@
-#+TITLE: devlift
+#+TITLE: A stash of notes
 
 - 2023.11.17   [[file:concepts/socket.org][Socket]]
 - 2023.11.15   [[file:concepts/port.org][port]]
