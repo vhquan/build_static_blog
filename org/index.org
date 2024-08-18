@@ -1,12 +1,3 @@
 #+TITLE: A stash of notes
 
-- 2023.11.17   [[file:concepts/socket.org][Socket]]
-- 2023.11.15   [[file:concepts/port.org][port]]
-- 2023.10.29   [[file:concepts/file_descriptor.org][File Descriptor]]
-- 2023.10.15   [[file:concepts/message-queue.org][Message Queue]]
-- 2023.10.14   [[file:concepts/references-in-cpp.org][References in C++]]
-- 2023.09.07   [[file:concepts/cache.org][Cache]]
-- 2023.09.04   [[file:concepts/diff_core_and_cpu.org][Differences between core and CPU]]
-- 2023.09.03   [[file:ask/10_million_questions_about_oop.org][10 million question about OOP]]
-- 2023.09.03   [[file:ask/thread_really.org][What is a "thread" (really)?]]
-- 2023.09.03   [[file:concepts/thread.org][Thread in Operating System]]
+- 2024.08.18   [[file:sec/test2.org][Bài kiểm tra số 2]]

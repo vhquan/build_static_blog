@@ -1,19 +1,46 @@
-@import url('https://fonts.googleapis.com/css2?family=Gentium+Book+Plus:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
-@import url('https://fonts.cdnfonts.com/css/segoe-ui-4');
+@import url('https://fonts.googleapis.com/css2?family=Bona+Nova:ital,wght@0,400;0,700;1,400&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Fragment+Mono:ital@0;1&family=Vollkorn:ital,wght@0,400..900;1,400..900&display=swap');
 
-* {
-    font-family: 'Segoe UI', sans-serif;
-    margin: auto;
-    max-width: 78ch;
+.title {
+  font-family: "Vollkorn", serif;
+  font-optical-sizing: auto;
+  font-size: 24px;
+  font-weight: 600;
+  font-style: normal;
 }
 
-pre,
-code {
-    font-family: "JetBrains Mono", monospace;
-    font-size: 12px;
+h1 {
+    font-family: "Vollkorn", serif;
+    font-optical-sizing: auto;
+    font-size: 20px;
+}
+
+h2 {
+    font-family: "Vollkorn", serif;
+    font-optical-sizing: auto;
+    font-size: 18px;
+}
+
+h3 {
+    font-family: "Vollkorn", serif;
+    font-optical-sizing: auto;
+    font-size: 16px;
+}
+
+.content {
+    font-family: "Bona Nova", serif;
+    font-optical-sizing: auto;
+    font-size: 16px;
+    font-weight: 400;
+    font-style: normal;
+}
+
+pre, code {
+    font-family: "Fragment Mono", monospace;
+    font-size: 15px;
+    font-style: normal;
     background-color: #e8e8e8;
     border-radius: 3px;
     padding: 3px;
     border-width: thick;
 }
+
