@@ -1,0 +1,33 @@
+#+TITLE: How to use Porkbun SSL Certificate files with NGINX?
+#+AUTHOR: devlift
+
+Figure out how to use the Porkbun Let's Encrypt files with Nginx. They have
+generated a zip file with the following files: ~domain.cert.pem~, ~intermediate.cert.pem~, ~private.key.pem~, ~public.key.pem~
+
+If we used the certbot we will get these files: ~README~, ~cert.pem~,
+~chain.pem~, ~fullchain.pem~, ~privkey.pem~
+
+So
+- ~ssl_certificate~ should point to ~fullchain.pem~
+- ~ssl_certificate_key~ should point to ~privkey.pem~
+- ~ssl_trusted_certificate~ should point to ~chain.pem~
+
+From what we see, the Porkbun generated files are just renamed and mapped like
+this:
+- ~fullchain.pem~ -> ~domain.cert.pem~
+- ~privkey.pem~ -> ~private.key.pem~
+- ~chain.pem~ -> ~intermediate.cert.pem~
+- ~cert.pem~ -> ~public.key.pem~
+
+So we should do this for the files given by Porkbun:
+- ~ssl_certificate~ should point to ~domain.cert.pem~
+- ~ssl_certificate_key~ should point to ~private.key.pem~
+- ~ssl_trusted_certificate~ should point to ~intermediate.cert.pem~
+
+Basically ~fullchain.pem~ is just made up of ~cert.pem~ + ~chain.pem~
+concatenated together. 
+
+Personally, I would /not/ use their generated ones because you would have to
+manually replace it every 90 days. Best if you use another option like
+*certbot* which lets you automatically renew it or do it 'manually' via some
+cronjob. Gook luck!

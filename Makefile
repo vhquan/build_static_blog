@@ -5,7 +5,6 @@ all: publish
 
 publish: publish.el
 	@echo "Publishing ... with current Emacs configurations."
-	cp -r css/ ~/Workspace/vhquan.github.io
 	emacs --batch --load htmlize.el --load publish.el --funcall org-publish-all
 
 publish_no_init: publish.el
