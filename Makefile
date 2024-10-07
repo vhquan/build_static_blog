@@ -5,6 +5,7 @@ all: publish
 
 publish: publish.el
 	@echo "Publishing ... with current Emacs configurations."
+	cp -r css/ ~/Workspace/vhquan.github.io
 	emacs --batch --load htmlize.el --load publish.el --funcall org-publish-all
 
 publish_no_init: publish.el
@@ -18,6 +19,7 @@ update:
 
 clear:
 	@rm -rf $$(find . -name "*~")
+	@rm -rf ~/Workspace/vhquan.github.io/*
 
 clean:
 	@echo "Cleaning up..."

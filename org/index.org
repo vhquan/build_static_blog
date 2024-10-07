@@ -1,3 +1,0 @@
-#+TITLE: A stash of notes
-
-- 2024.08.18   [[file:sec/test2.org][Bài kiểm tra số 2]]
