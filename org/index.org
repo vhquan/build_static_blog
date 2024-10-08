@@ -1,3 +1,4 @@
 #+TITLE: Min knowledge
 
+- 2024.10.08   [[file:emacs-org-tips.org][Some tips when writing a org in Emacs]]
 - 2024.10.07   [[file:how-to-use-porkbun-ssl.org][How to use Porkbun SSL Certificate files with NGINX?]]

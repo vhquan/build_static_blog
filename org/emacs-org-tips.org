@@ -1,0 +1,30 @@
+#+TITLE: Some tips when writing a org in Emacs
+#+AUTHOR: devlift
+#+OPTIONS: toc:nil
+
+* Table of contents
+The table of contents includes all headlines in the document. If you need to
+use a different depth, or turn it off entirely, set the ~org-export-with-toc~
+variable accordingly. You can achieve the same on a per file basis, using the
+following '*toc*' item in '*OPTIONS*' keyword:
+
+```
+#+OPTION: toc:2     (only include two levels in TOC)
+#+OPTION: toc:nil   (no default TOC at all)
+```
+
+* Emphasis and Monospace
+You can make words '*bold*', '/italic/', '_underlined_', '=verbatim=' and
+'~code~', and, if you must, '+strike-through+'. 
+
+* Special symbols
+You can use LaTeX-like syntax to insert special symbols - named entities -
+like '\alpha' to indicate the Greek letter, or '\to' to indicate an arrow.
+Completion for these symbols is available, just type '\' and maybe a few
+letters, and press ~M-TAB~ to see possible completions. If you need such a
+symbol inside a word, terminate it with a pair of curly brackets. For example:
+
+#+BEGIN_QUOTE
+Pro tip: Given a circle \Gamma of diameter d, the length of its circumference
+is \pi{}d.
+#+END_QUOTE
