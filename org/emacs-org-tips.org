@@ -8,10 +8,10 @@ use a different depth, or turn it off entirely, set the ~org-export-with-toc~
 variable accordingly. You can achieve the same on a per file basis, using the
 following '*toc*' item in '*OPTIONS*' keyword:
 
-```
+#+BEGIN_SRC
 #+OPTION: toc:2     (only include two levels in TOC)
 #+OPTION: toc:nil   (no default TOC at all)
-```
+#+END_SRC
 
 * Emphasis and Monospace
 You can make words '*bold*', '/italic/', '_underlined_', '=verbatim=' and

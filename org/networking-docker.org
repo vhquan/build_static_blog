@@ -1,0 +1,23 @@
+#+TITLE: Networking - Docker
+#+AUTHOR: devlift
+
+Nginx knows about the web app container because it's configured to do so
+within the Docker Compose environment.
+
+Here's a breakdown of how it works:
+- *Docker compose network*: When you see Docker compose to start multiple
+containers, it creates a network for them to communicate with each other. This
+network allows containers to discover and reach each other using their
+container names or IP addresses.
+- *Nginx configuration*: In the Nginx configuration file, you specify the
+target container or IP address where the web app is running. This information
+is used by Nginx to forward requests to the correct container.
+- *Container Resolution*: Nginx uses the Docker compose network to resolve the
+container name or IP address. This means that Nginx can look up the
+container's network details and establish a connection to it.
+
+\to Docker compose resolves the ~webapp~ container name to its IP address
+within the network, allowing Nginx to forward requests to the correct
+container.
+
+Ref: [[https://docs.docker.com/engine/network/][Networking - Docker]]
