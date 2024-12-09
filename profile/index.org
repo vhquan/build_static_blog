@@ -1,0 +1,15 @@
+#+TITLE: Profile
+#+AUTHOR: devlift
+
+* About Me
+I'm a software developer passionate about technology and writing. This blog is where I share my thoughts and experiences about various technical topics.
+
+* Skills
+- Software Development
+- System Architecture
+- Technical Writing
+- Problem Solving
+
+* Contact
+- Email: vuhongquanbk97@gmail.com
+- GitHub: [[https://github.com/vhquan][vhquan]] 

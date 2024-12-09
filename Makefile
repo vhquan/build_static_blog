@@ -1,5 +1,5 @@
 # Makefile for my blog
-.PHONY: all publish publish_no_init debug
+.PHONY: all publish publish_no_init debug profile
 
 all: publish
 
@@ -24,6 +24,7 @@ clean:
 	@echo "Cleaning up..."
 	@rm -rvf *.elc
 	@rm -rvf ~/.org-timestamps/*
+	@rm -rf ~/Workspace/vhquan.github.io/*
 
 debug:
 	python -m http.server
