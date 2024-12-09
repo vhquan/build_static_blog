@@ -8,11 +8,11 @@
 (defun org-sitemap-custom-entry-format (entry style project)
   (let ((filename (org-publish-find-title entry project)))
     (if (= (length filename) 0)
-	(format "*%s*" entry)
+        (format "*%s*" entry)
       (format "%s   [[file:%s][%s]]"
-	      (format-time-string "%Y.%m.%d" (org-publish-find-date entry project))
-	      entry
-	      filename))))
+              (format-time-string "%Y.%m.%d" (org-publish-find-date entry project))
+              entry
+              filename))))
 
 (setq org-publish-project-alist
       '(("org"
@@ -22,20 +22,22 @@
          :recursive t
          :publishing-function org-html-publish-to-html
          :auto-sitemap t
+         :html-head "<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/css2?family=Fira+Mono&family=Source+Code+Pro&display=swap\">
+           <link rel=\"stylesheet\" href=\"/style.css\" type=\"text/css\"/>"
          :sitemap-sort-files anti-chronologically
-	    :auto-preamble nil
-        :sitemap-title "Min knowledge"
-        :sitemap-filename "index.org"
-        :sitemap-format-entry org-sitemap-custom-entry-format
-        :sitemap-style list
-        :author "quanvh9"
-        :email "vuhongquanbk97@gmail.com"
-        :with-creator nil
-	    :html-head-include-default-style nil
-	    :html-head-include-scripts nil
-	    :html-preamble blog-header
-        :html-postamble nil
-	    :html-link-home "/")
+         :auto-preamble nil
+         :sitemap-title "Devlift's archives"
+         :sitemap-filename "index.org"
+         :sitemap-format-entry org-sitemap-custom-entry-format
+         :sitemap-style list
+         :author "quanvh9"
+         :email "vuhongquanbk97@gmail.com"
+         :with-creator nil
+         :html-head-include-default-style nil
+         :html-head-include-scripts nil
+         :html-preamble blog-header
+         :html-postamble nil
+         :html-link-home "/")
         ("static"
          :base-directory "org/"
          :base-extension "css\\|htaccess\\|png\\|jpg\\|gif\\|pdf\\|mp3\\|ogg\\|swf\\|txt"
