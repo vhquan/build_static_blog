@@ -1,0 +1,15 @@
+#+TITLE: Squash git commits
+#+AUTHOR: devlift
+#+DATE: <2024-10-29 Tue 20:34>
+
+* Squash commits in Git with Interactive rebase
+
+In this process, we will grab all the commits with the =git rebase= command with
+the =i= flag and put them together with =squash=.
+
+We need to tell Git how far back we want to rebase. For example, we need to go
+back 6 commits.
+
+=git rebase -i HEAD~6=
+
+
