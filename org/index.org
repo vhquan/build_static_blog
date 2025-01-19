@@ -1,5 +1,9 @@
 #+TITLE: Devlift's archives
 
-- 2024.12.09   [[file:networking-docker.org][Networking - Docker]]
-- 2024.12.09   [[file:how-to-use-porkbun-ssl.org][How to use Porkbun SSL Certificate files with NGINX?]]
-- 2024.12.09   [[file:emacs-org-tips.org][Some tips when writing a org in Emacs]]
+- 2025.01.06   [[file:take-screenshots-on-linux.org][Take screenshots on Linux]]
+- 2025.01.06   [[file:concurrency.org][Concurrent programming]]
+- 2025.01.04   [[file:what-is-a-socket.org][In programming, what is a socket?]]
+- 2024.10.29   [[file:squash_git_commits.org][Squash git commits]]
+- 2024.10.08   [[file:networking-docker.org][Networking - Docker]]
+- 2024.10.08   [[file:emacs-org-tips.org][Some tips when writing a org in Emacs]]
+- 2024.10.07   [[file:how-to-use-porkbun-ssl.org][How to use Porkbun SSL Certificate files with NGINX?]]

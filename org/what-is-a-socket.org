@@ -1,0 +1,138 @@
+#+TITLE: In programming, what is a socket?
+#+AUTHOR: dev.lift
+#+DATE: 2025-01-04
+#+OPTIONS: toc:nil
+
+* Concept
+Socket is a way to speak to other programs using standard Unix file
+descriptors. "Everything in Unix is a file!"
+
+The fact that when Unix programs do any sort of I/O, they do it by reading or
+writing to a file descriptor. A file descriptor is simply an integer
+associated with an open file. But, that file can be a network connection, a
+FIFO, a pipe, a terminal, a real on-the-disk file, or just about anything
+else.
+
+So "Where do I get this file descriptor for network communication?" To do so,
+you make a call to the =socket()= system routine. It returns the socket
+descriptor, and you communicate through it using the specilized ~send()~ and
+~recv()~ socket calls.
+
+"But if it's a file descriptor, why can't I just use the normal =read()= and
+=write()= calls to communicate through socket?" The short answer is "You can!",
+the longer answer is, "You can, but =send()= and =recv()= offer much greater
+control over your data transmission."
+
+** Back to regid concepts
+A socket in programming is a *software construct* that enables communication
+between processes, either on the same machine or across a network. It is not a
+hardware component but rather an abstraction provided by the operating system
+to facilitate network communication.
+
+*** Where the idea comes from
+The concept of sockets originated from the Berkeley Software Distribution
+(BSD) in the early 1980s as part of the Berkeley Sockets API.
+
+*** How sockets work
+Sockets are created using system calls provided by the OS (e.g., =socket()= ,
+=bind()=, =listen()=, =accept()=, =connect()=, =send()=, =recv()=). They use IP addresses
+and port numbers to identify the source and destination of communication.
+
+Behind the scenes, a *socket* is a essentially a software file descriptor that
+represents a communication endpoint. It is managed by the OS and interacts
+with the network stack to enable data exchange.
+
+**** Socket as a file descriptor
+In Unix-like operating systems, *everything is treated as a file*, including
+sockets. When you craete a socket using the =socket()= system call, the
+operating system returns a file descriptor (an integer) that uniquely
+identifies the socket. This file descriptor is used in subsequent system calls
+(e.g., =read()=, =write()=, =send()=, =recv()=) to perform operations on the socket.
+
+**** How sockets work internally
+Kernel data structure: The OS kernel maintains internal data structures to
+manage sockets, such as:
+
+- *Socket buffers*: for storing incoming and outgoing data.
+- *Protocol-specific information*: For handling TCP, UDP, or other protocols.
+- *Connection state*: For tracking the state of the connection (e.g.,
+  established, closed, listening)
+
+Network stack interaction: when data is sent or received through a socket, the
+kernel interacts with the network stack (e.g., TCP/IP stack) to handle packet
+encapsulation, routing and delivery.
+
+* Socket and file descriptor
+When you create a socket using =socket()= system call, it returns an integer
+file descriptor (e.g., 3, 4, 5, etc) to your process. This integer is not just
+a random number - it is a handle that the OS uses internally to identify and
+manage the socket.
+
+** File desciptor table in the process
+- Every process has a file descriptor table maintained by the OS.
+- This table maps the integer file descriptor (return by =socket()=) to an entry
+  in the kernel's internal data structure.
+
+For example:
+File Descriptor Table for Process:
++-------------------+-------------------+
+| File Descriptor   | Kernel Resource   |
++-------------------+-------------------+
+| 0 (stdin)         | Terminal Input    |
+| 1 (stdout)        | Terminal Output   |
+| 2 (stderr)        | Terminal Error    |
+| 3                 | Socket Object A   |
+| 4                 | Socket Object B   |
++-------------------+-------------------+
+
+- When =socket()= is called, the OS allocates the next available integer in the
+  file descriptor table and associates it with the newly created socket.
+
+** Kernel's internal socket structures:
+The OS kernel maintains its own data structures to manage sockets, such as:
+- *Socket buffers*: For storing incoming and outgoing data.
+- *Protocol-specific information*: For handling TCP, UDP or other protocols.
+- *Connection state*: For tracking the state of the connection (e.g.,
+  established, closed, listening).
+
+The integer file descriptor returned to your process is essentially a
+reference to these internal kernel structures.
+
+** How the OS links the file descriptor to the socket
+When your process makes a system call (e.g. =send()=, =recv()=, =bind()=, =close()=),
+it passes the file descriptor (e.g. 3) as an argument.
+
+The OS use this integer to:
+1. Look up the corresponding entry in the process's file descriptor table.
+2. Find the associated kernel socket object.
+3. Perform the requested operation on that socket.
+
+#+BEGIN_SRC c
+  int sockfd = socket(AF_INET, SOCK_STREAM, 0) // return 3
+  bind(sockfd, (struct sockaddr*)&addr, sizeof(addr));
+  send(sockfd, "Hello", 5, 0);
+#+END_SRC
+
+** Why use integers as file descriptors
+- *Efficiency*: Integers are simple and fast to handle in both user space and
+  kernel space.
+- *Abstraction*: The integer file descriptor hides the complexity of the
+  kernel's internal socket structures from the application.
+- *Uniformity*: In Unix-like systems, all I/O resources (files, pipes, sockets,
+  etc.) are represented as file descriptors, providing a consistent interface.
+
+** Kernel's role in managing sockets
+The kernel is responsible for: creating and managing socket objects,
+associating file descriptors with sockets and handling network protocols
+(e.g., TCP/IP, UDP), managing buffers and connection states.
+
+The applicatin only interacts with the file descriptor, while the kernel
+handles the low-level details.
+
+* Same file descriptor value from multiple processes?
+If two different processes call =socket()= and both receive the same file
+descriptor value (e.g., 3), these file descriptors refer to *completely
+different socket* in the OS.
+
+- File descriptors are process-specific: Each process has its own file
+  descriptor table, which is maintained by the OS.

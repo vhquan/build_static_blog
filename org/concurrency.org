@@ -1,0 +1,240 @@
+#+TITLE: Concurrent programming
+#+AUTHOR: dev.lift
+#+DATE: 2025-01-05
+#+OPTIONS: toc:nil
+
+Mention concurrency and you're bound to get two kinds of unsolicited advice:
+first that it's a nightmarish problem which will melt your brain, and second
+that there's a magical programming language or niche paradigm which will make
+all your problems disappear.
+
+* Concurrency and parallelism
+First it's important to distinguish concurrency and parallelism. *Concurrency*
+is athe ability of parts of a program to work correctly when executed out of
+order. For instance, imagine tasks A and B. One way to execute them is
+sequentially, meaning doing all steps for A, then all for B:
+
+#+BEGIN_CENTER
+████  ░░░░
+#+END_CENTER
+
+Concurrent execution, on the other hand, alternates doing a little of each
+task until both are all complete:
+
+#+BEGIN_CENTER
+████  ░░  ████  ░░  ████  ░░  ████  ░░  ████
+#+END_CENTER
+
+#+BEGIN_CENTER
+████ represents for task A
+░░ represents for task B
+#+END_CENTER
+
+Concurrency allows a program to make progress even when certain parts are
+blocked. For instance, when one task is waiting for user input, the system can
+switch to another task and do calculations.
+
+When tasks don't just interleave, but run at the same time, that's called
+*parallelism*. Multiple CPU cores can run instructions simultanenously:
+
+#+BEGIN_CENTER
+████ task A
+░░░░ task B
+#+END_CENTER
+
+When a program - even without hardware parallelism - switches rapidly enough
+from one task to another, it can feel to the user that tasks are executing at
+the same time. You could say it provides the "illusion of parallelism."
+However, true parallelism has the potential for greater processor throughput
+for problems that can be broken into independent subtasks. Some ways of
+dealing with concurrency, such as multi-threaded programming, can exploit
+hardware parallelism automatically when available.
+
+Some languages (or more accurately, some language implementations) are unable
+to achieve true multi-threaded parallelism.
+
+* First concurrent program
+Languages and libraries offer different ways to add concurrency to a
+program. UNIX for instance has a bunch of disjointed mechanisms like signals,
+asynchronous I/O (AIO), select, poll and setjmp/longimp. Using these
+mechanisms can complicate program structure and make programs harder to read
+than sequential code.
+
+Threads offer a cleaner and more consistent way to address these
+motivations. For I/O they're usually clearer than polling or callbacks, and
+for processing they are more efficient than Unix processes.
+
+* Crazy bankers
+Let's get started by adding concurrency to a program to simulate a bunch of
+crazy bankers sending random amounts of money from one bank account to
+another. The bankers don't communicate with one another, so this is a
+demonstration of concurrency without synchronization.
+
+Adding concurrency is the easy part. The real work is in making threads wait
+for one another to ensure a correct result. We'll see a number of mechanisms
+and patterns for synchronization later, but for now let's see what goes wrong
+without synchronization.
+
+#+BEGIN_SRC c
+/* banker.c */
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <pthread.h>
+#include <time.h>
+
+#define N_ACCOUNTS 10
+#define N_THREADS 20
+#define N_ROUNDS 10000
+
+/* 10 accounts with $1000 apiece means there's $1,000
+   in the system. Let's hope it stays that way... */
+#define INIT_BALANCE 100
+
+/* making a struct here for the benefit of future 
+   versions of this program */
+struct account {
+    long balance;
+} accts[N_ACCOUNTS];
+
+/* Helper for bankers to choose an account and amount at 
+   random. It came from Steve Summit's excellent C FAQ
+   http://c-faq.com/lib/randrange.html */
+int rand_range(int N) {
+    return (int)((double)rand() / ((double)RAND_MAX + 1) * N);
+}
+
+/* each banker will run this function concurrently. The 
+   weird signature is required for a thread function */
+void *disburse(void *arg) {
+    size_t i, from, to;
+    long payment;
+
+    /* idiom to tell compiler arg is unused */
+    (void)arg;
+
+    for (i = 0; i < N_ROUNDS; i++) {
+        /* pick distinct 'from' and 'to' accounts */
+        from = rand_range(N_ACCOUNTS);
+        do {
+            to = rand_range(N_ACCOUNTS);
+        } while (to == from);
+
+        /* go nuts sending money, try not to overdraft */
+        if (accts[from].balance > 0) {
+            payment = 1 + rand_range(accts[from].balance);
+            accts[from].balance -= payment;
+            accts[to].balance += payment;
+        }
+    }
+
+    return NULL;
+}
+
+int main(void) {
+    size_t i;
+    long total;
+    pthread_t ts[N_THREADS];
+
+    srand(time(NULL));
+
+    for (i = 0; i < N_ACCOUNTS; i++) 
+        accts[i].balance = INIT_BALANCE;
+
+    printf("Initial money in system: %d\n",
+        N_ACCOUNTS * INIT_BALANCE);
+
+    /* start the threads, using whatever parallelism the
+    system happens to offer. Note that pthread_create 
+    is the *only* function that creates concurrency */
+    for (i = 0; i < N_THREADS; i++)
+        pthread_create(&ts[i], NULL, disburse, NULL);
+
+    /* wait for the threads to all finish, using the
+    pthread_t handles pthread_create gave us */
+    for (i = 0; i < N_THREADS; i++)
+        pthread_join(ts[i], NULL);
+
+    for (total = 0, i = 0; i < N_ACCOUNTS; i++) 
+        total += accts[i].balance;
+
+    printf("Final money in system: %ld\n", total);
+
+    return 0;
+}
+#+END_SRC
+
+* Data races
+Threads share memory directly. Each thread can read and write variables in
+shared memory without any overhead. However when threads simultanenously read
+and write the same data it's called a *data race* and generally causes problems.
+
+In particular, threads in *banker.c* have data races when they read and write
+account balances. The bankers program moves money between accounts, however
+the total amount of money in the system does not remain constant. The book
+don't balance. Exactly how the program behaves depends on thread scheduling
+policies of the operating system. On OpenBSD the total money seldom stays at
+$1,000. Sometimes money gets duplicated, sometimes it vanishes. On MacOS the
+result is generally that all the money disappear, or even becomes negative!
+
+The property that money is neither created nor destroyed in a bank is an
+example of a *program invariant*, and it gets violated by data races. Note that
+parallelism is not required for a race, only concurrency.
+
+Here's the problematic code in the *disburse()* function:
+
+#+BEGIN_SRC c
+  payment = 1 + rand_range(accts[from].balance);
+  accts[from].balance -= payment;
+  accts[to].balance += payment;
+#+END_SRC
+
+The threads running this code can be paused or interleaved at any time. Not
+just between any of the statements, but partway through arithmetic operations
+which may not execute atomically on the hardware. Never rely on "thread
+inertia," which is the mistaken feeling that the thread will finish a group of
+statements without interference.
+
+Let's examine how statements can interleave between banker threads, and the
+resulting problems. The columns of the table below are threads, and the rows
+are moments in time.
+
+Here's a timeline where two threads read the same account balance when
+planning how much money to transfer. It can cause an overdraft.
+
+#+CAPTION: Overdrafting
+
+#+BEGIN_SRC text
+| Thread A                        | Thread B                        |
+|---------------------------------|---------------------------------|
+| payment = 1 + rand_range(accts[from].balance); | payment = 1 + rand_range(accts[from].balance); |
+#+END_SRC
+
+*Explaination*
+
+At this point, thread B’s payment-to-be may be in excess of the true balance because thread A has already earmarked some of the money unbeknownst to B.
+
+#+BEGIN_SRC text
+| accts[from].balance -= payment; | accts[from].balance -= payment; |
+#+END_SRC
+
+*Explaination*
+
+Some of the same dollars could be transferred twice, and the originating
+account could even go negative if the overlap of the payments is big enough.
+
+Here's a timeline where the debit made by one thread can be undone by that
+made by another.
+
+#+CAPTION: Lost Debit
+
+| **Thread A**                        | **Thread B**                        |
+|-------------------------------------|-------------------------------------|
+| accts[from].balance -= payment;     | accts[from].balance -= payment;     |
+
+If the operation is not atomic, the threads might switch execution after
+reading the balance and after doing arithmetic, but before assignment. Thus,
+one assignment would be overwritten by the other. The “lost update” creates
+extra money in the system.
+
+Sim

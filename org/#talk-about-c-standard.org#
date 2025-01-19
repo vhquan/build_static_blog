@@ -1,0 +1,20 @@
+#+TITLE: Talk about C standards
+#+AUTHOR: dev.lift
+#+DATE: 2025-01-04
+#+OPTIONS: toc:nil
+
+The C programming language has several standard versions, which the most
+commonly used ones being C89/C90, C99, C11 and C18.
+
+- C89/C90 (ANSI C or ISO C) was the first standardized version of the
+  language, released in 1989 and 1990, respectively. This standard introduced
+  many of the features that are still used in modern C programming, including
+  data types, control structure, and the standard library.
+- C99 introduced several new features, including variable-length arrays,
+  flexible array members, complex numbers, inline function, and designed
+  intializers. This standard also includes several new library functions and
+  updates to existing ones.
+- C11 introduced several new features, including _Generic, static_assert, and
+  the atomic type qualifier. This standard also includes several updates to
+  the library, including new f
+

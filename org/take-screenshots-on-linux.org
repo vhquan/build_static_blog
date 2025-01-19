@@ -1,0 +1,15 @@
+#+TITLE: Take screenshots on Linux
+#+AUTHOR: dev.lift
+#+DATE: 2025-01-06
+#+OPTIONS: toc:nil
+
+*TL; DR*: Using flameshot
+
+* Install Flameshot
+#+BEGIN_SRC bash
+  sudo apt install -y flameshot
+  sudo dnf install -y flameshot
+#+END_SRC
+
+* Create a shortcut key
+Create command: =flameshot gui= -> your shortcut kbd
